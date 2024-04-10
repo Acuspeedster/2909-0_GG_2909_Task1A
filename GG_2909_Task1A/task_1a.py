@@ -1,39 +1,9 @@
-'''
-*****************************************************************************************
-*
-*        		===============================================
-*           		GeoGuide(GG) Theme (eYRC 2023-24)
-*        		===============================================
-*
-*  This script is to implement Task 1A of GeoGuide(GG) Theme (eYRC 2023-24).
-*  
-*  This software is made available on an "AS IS WHERE IS BASIS".
-*  Licensee/end user indemnifies and will keep e-Yantra indemnified from
-*  any and all claim(s) that emanate from the use of the Software or 
-*  breach of the terms of this agreement.
-*
-*****************************************************************************************
-'''
-
-# Team ID:			[ Team-ID ]
-# Author List:		[ Names of team members worked on this file separated by Comma: Name1, Name2, ... ]
-# Filename:			task_1a.py
-# Functions:	    [`ideantify_features_and_targets`, `load_as_tensors`,
-# 					 `model_loss_function`, `model_optimizer`, `model_number_of_epochs`, `training_function`,
-# 					 `validation_functions` ]
 
 ####################### IMPORT MODULES #######################
 import pandas as pd
 import torch
 import numpy as np
-###################### Additional Imports ####################
-'''
-You can import any additional modules that you require from 
-torch, matplotlib or sklearn. 
-You are NOT allowed to import any other libraries. It will 
-cause errors while running the executable
-'''
-##############################################################
+
 
 ################# ADD UTILITY FUNCTIONS HERE #################
 import matplotlib.pyplot as plt
@@ -60,7 +30,7 @@ def data_preprocessing(task_1a_dataframe):
 	''' 
 	Purpose:
 	---
-	This function will be used to load your csv dataset and preprocess it.
+	This function will be used to load the csv dataset and preprocess it.
 	Preprocessing involves cleaning the dataset by removing unwanted features,
 	decision about what needs to be done with missing values etc. Note that 
 	there are features in the csv file whose values are textual (eg: Industry, 
@@ -97,7 +67,6 @@ def data_preprocessing(task_1a_dataframe):
 	encoded_dataframe['JoiningYear'] =  le.fit_transform(encoded_dataframe['JoiningYear'])
 
 	
-	##########################################################
 	return encoded_dataframe
 	
 
@@ -127,11 +96,11 @@ def identify_features_and_targets(encoded_dataframe):
 	features_and_targets = identify_features_and_targets(encoded_dataframe)
 	'''
 
-	#################	ADD YOUR CODE HERE	##################
+	
 	x = encoded_dataframe.iloc[:,:-1]
 	y = encoded_dataframe.iloc[:,[-1]]
 	features_and_targets=[x,y]
-	##########################################################
+	
 
 	return features_and_targets
 
@@ -168,7 +137,7 @@ def load_as_tensors(features_and_targets):
     tensors_and_iterable_training_data = load_as_tensors(features_and_targets)
     '''
 
-    #################	ADD YOUR CODE HERE	##################
+   
     global X_train_tensor, X_test_tensor, y_train_tensor, y_test_tensor
     X = features_and_targets[0].select_dtypes(include=[np.number]).values
     y = features_and_targets[1].values
@@ -183,7 +152,7 @@ def load_as_tensors(features_and_targets):
     train_dataset = TensorDataset(X_train_tensor, y_train_tensor)
     train_loader = DataLoader(dataset=train_dataset, batch_size=32, shuffle=True, num_workers=4)
     tensors_and_iterable_training_data = [X_train_tensor, X_test_tensor, y_train_tensor, y_test_tensor, train_loader]
-    ##########################################################
+    
     
     return tensors_and_iterable_training_data
 
@@ -209,7 +178,7 @@ class Salary_Predictor(nn.Module):
 		'''
 		Define the type and number of layers
 		'''
-		#######	ADD YOUR CODE HERE	#######
+		
 		self.fc1 = nn.Linear(8, 128)
 		self.relu = nn.ReLU()
 		# self.fc2 = nn.Linear(128, 64)
@@ -218,13 +187,13 @@ class Salary_Predictor(nn.Module):
 		self.relu = nn.ReLU()
 		self.fc4 = nn.Linear(32, 1)
 		self.sigmoid = nn.Sigmoid()
-		###################################	
+		
 
 	def forward(self, x):
 		'''
 		Define the activation functions
 		'''
-		#######	ADD YOUR CODE HERE	#######
+		
 		out = self.fc1(x)
 		out = self.relu(out)
 		# out = self.fc2(out)
@@ -235,7 +204,7 @@ class Salary_Predictor(nn.Module):
 		out = self.sigmoid(out)
 
 		predicted_output = out
-		###################################
+		
 
 		return predicted_output
 
@@ -261,12 +230,12 @@ def model_loss_function():
     loss_function = model_loss_function()
     '''
     
-	#################	ADD YOUR CODE HERE	##################
-    # Define your loss function here
+	
+    # Defined the loss function here
 	loss_function = nn.BCEWithLogitsLoss()
 
     	
-	##########################################################
+
 	
 	return loss_function
 
@@ -290,9 +259,9 @@ def model_optimizer(model):
 	---
 	optimizer = model_optimizer(model)
 	'''
-	#################	ADD YOUR CODE HERE	##################
+	
 	optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-	##########################################################
+	
 
 	return optimizer
 
@@ -314,9 +283,9 @@ def model_number_of_epochs():
 	---
 	number_of_epochs = model_number_of_epochs()
 	'''
-	#################	ADD YOUR CODE HERE	##################
+	
 	number_of_epochs = 20
-	##########################################################
+	
 
 	return number_of_epochs
 
@@ -344,7 +313,7 @@ def training_function(model, number_of_epochs, tensors_and_iterable_training_dat
     trained_model = training_function(model, number_of_epochs, iterable_training_data, loss_function, optimizer)
 
     '''    
-    #################    ADD YOUR CODE HERE    ##################
+    
     train_loader = tensors_and_iterable_training_data[4]
 
     for epoch in range(number_of_epochs):
@@ -369,7 +338,7 @@ def training_function(model, number_of_epochs, tensors_and_iterable_training_dat
 
 
     trained_model = model
-    ##########################################################
+   
 
     return trained_model
 
@@ -396,7 +365,7 @@ def validation_function(trained_model, tensors_and_iterable_training_data):
     model_accuracy = validation_function(trained_model, tensors_and_iterable_training_data)
     '''
 
-    #################    ADD YOUR CODE HERE    ##################
+    
     y_test=tensors_and_iterable_training_data[3]
     model.eval()
     with torch.no_grad():
@@ -406,13 +375,11 @@ def validation_function(trained_model, tensors_and_iterable_training_data):
     precision = precision_score(y_test_tensor, y_pred)
     recall = recall_score(y_test_tensor, y_pred)
     f1 = f1_score(y_test_tensor, y_pred)
-    ##########################################################
+    
 
     return model_accuracy, precision, recall, f1
     
-########################################################################
-########################################################################
-######### YOU ARE NOT ALLOWED TO MAKE CHANGES TO THIS FUNCTION #########
+
 '''
 	Purpose:
 	---
